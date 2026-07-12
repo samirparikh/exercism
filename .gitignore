@@ -1,0 +1,67 @@
+# =========================================
+# Build Results
+# =========================================
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Native and raw compiled outputs
+*.o
+*.out
+
+# =========================================
+# Visual Studio / Rider / VS Code
+# =========================================
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# =========================================
+# NuGet Packages
+# =========================================
+# Ignore the NuGet package folder. 
+# If you are using PackageReference, packages are restored to the global packages folder.
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nupkg
+*.snupkg
+**/.nuget/
+
+# =========================================
+# Test Results
+# =========================================
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# =========================================
+# F# Specific
+# =========================================
+# F# uses the same bin/obj as C#. 
+# Ignore F# Interactive temp files if they leak into the project dir
+*.fsx.tmp
+
+# =========================================
+# OS Generated Files
+# =========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
