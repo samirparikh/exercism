@@ -13,11 +13,11 @@ bool is_pangram(const char *sentence) {
     for (int i = 0; sentence[i] != '\0'; i++) {
         int ch = sentence[i];
         // process capital letters A (65) through Z (90)
-        if (ch >= 65 && ch <= 90) {
-            letter[ch - 65] = true;
+        if (ch >= 'A' && ch <= 'Z') {
+            letter[ch - 'A'] = true;
         // process lower case letters a (97) through z (122)
-        } else if (ch >= 97 && ch <= 122) {
-            letter[ch - 97] = true;
+        } else if (ch >= 'a' && ch <= 'z') {
+            letter[ch - 'a'] = true;
         }
     }
 
