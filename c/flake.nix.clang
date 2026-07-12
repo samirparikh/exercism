@@ -1,0 +1,33 @@
+{
+  description = "C development environment";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = { self, nixpkgs }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      devShells.${system}.default =
+        (pkgs.mkShell.override {
+          stdenv = pkgs.clangStdenv;
+        }) {
+          packages = with pkgs; [
+            clang
+            gnumake
+            gdb
+            valgrind
+            clang-tools
+          ];
+
+          shellHook = ''
+            echo "C dev environment loaded"
+            echo "CC=$CC"
+            echo "CXX=$CXX"
+            cc --version | head -n1
+            clang --version | head -n1
+          '';
+        };
+    };
+}
