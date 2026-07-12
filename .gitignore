@@ -70,5 +70,5 @@ Desktop.ini
 # NixOS flake and environment files
 # =========================================
 flake.lock
-.envrc/
+.envrc
 .direnv/
