@@ -1,0 +1,87 @@
+module PhoneNumber
+
+type PhoneNumberValidationError =
+    | FewerThan10Digits
+    | MoreThan11Digits
+    | ContainsLetters
+    | ContainsPunctuation
+    | ElevenDigitsMustStartWith1
+    | AreaCodeCannotStartWith0
+    | AreaCodeCannotStartWith1
+    | ExchangeCodeCannotStartWith0
+    | ExchangeCodeCannotStartWith1
+    member this.Message =
+        match this with
+        | FewerThan10Digits -> "must not be fewer than 10 digits"
+        | MoreThan11Digits -> "must not be greater than 11 digits"
+        | ContainsLetters -> "letters not permitted"
+        | ContainsPunctuation -> "punctuations not permitted"
+        | ElevenDigitsMustStartWith1 -> "11 digits must start with 1"
+        | AreaCodeCannotStartWith0 -> "area code cannot start with zero"
+        | AreaCodeCannotStartWith1 -> "area code cannot start with one"
+        | ExchangeCodeCannotStartWith0 -> "exchange code cannot start with zero"
+        | ExchangeCodeCannotStartWith1 -> "exchange code cannot start with one"
+
+type PhoneNumberResult = private PhoneNumberResult of uint64
+
+module PhoneNumberResult =
+    // helper functions
+    let containsLetters phoneNumber =
+        phoneNumber
+        |> String.exists System.Char.IsLetter
+
+    let containsPunctuation phoneNumber =
+        let punctuation = "@:!"
+        phoneNumber
+        |> String.exists (fun c -> punctuation.Contains(c))
+
+    let processPhoneNumber phoneNumber =
+        phoneNumber
+        |> Seq.fold (fun acc c ->
+            match c with
+            | c when System.Char.IsNumber c -> c::acc
+            | _ -> acc
+        ) []
+        |> Seq.rev
+        |> Seq.toArray
+        |> System.String
+        //|> uint64
+
+    let unwrap (PhoneNumberResult phoneNumber) = phoneNumber
+
+    let create phoneNumber =
+        if containsLetters phoneNumber then Error ContainsLetters
+        elif containsPunctuation phoneNumber then Error ContainsPunctuation
+        else let digitsOnly = processPhoneNumber phoneNumber
+             if String.length digitsOnly < 10 then Error FewerThan10Digits
+             //else Ok (PhoneNumberResult (uint64 digitsOnly))
+             elif String.length digitsOnly > 11 then Error MoreThan11Digits
+             elif String.length digitsOnly = 11 && digitsOnly[0] <> '1' then Error ElevenDigitsMustStartWith1
+             elif digitsOnly[String.length digitsOnly - 10] = '0' then Error AreaCodeCannotStartWith0
+             elif digitsOnly[String.length digitsOnly - 10] = '1' then Error AreaCodeCannotStartWith1 
+             elif digitsOnly[String.length digitsOnly - 7]  = '0' then Error ExchangeCodeCannotStartWith0
+             elif digitsOnly[String.length digitsOnly - 7]  = '1' then Error ExchangeCodeCannotStartWith1
+             else
+                let result =
+                    if String.length digitsOnly = 10 then digitsOnly
+                    else digitsOnly[1 .. 10]
+                Ok (
+                    result
+                    |> uint64
+                    |> PhoneNumberResult
+                )
+             // else Ok (
+             //     digitsOnly
+             //     |> uint64
+             //     |> PhoneNumberResult
+             // )
+        //else Ok (PhoneNumberResult (processPhoneNumber phoneNumber))
+
+// Result<'T,'TError> is a discriminated union representing either success or failure:
+// - Ok 2234567890UL — success, containing the parsed phone number as a uint64
+// - Error "some message" — failure, containing an error description as a string
+// So Result<uint64,string> means: "either a uint64 on success, or a string describing the error on failure."
+let clean (input: string): Result<uint64,string> =
+    match PhoneNumberResult.create input with
+    | Ok phoneNumberResult -> Ok (PhoneNumberResult.unwrap phoneNumberResult)
+    | Error error -> Error error.Message
