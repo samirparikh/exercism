@@ -65,3 +65,10 @@ bld/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# =========================================
+# NixOS flake and environment files
+# =========================================
+flake.lock
+.envrc/
+.direnv/
