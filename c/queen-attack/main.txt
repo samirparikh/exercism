@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include "queen_attack.h"
+
+int main(void)
+{
+    position_t queen1 = {0, 3};
+    position_t queen2 = {7, 3};
+
+    attack_status_t result = can_attack(queen1, queen2);
+
+    printf("Result = %d\n", result);
+
+    return 0;
+}
