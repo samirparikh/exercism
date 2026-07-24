@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include "hamming.h"
+#include <stdbool.h>
+
+#define MAXLENGTH 100
+
+bool read_line(char *string, int max_length) {
+    int ch;
+    int length = 0;
+
+    if (max_length <= 0) {
+        fprintf(stderr, "max line length must be greater than 0\n");
+        return false;
+    }
+
+    while ((ch = getchar()) != EOF && ch != '\n') {
+        if (length < max_length - 1) {
+            string[length++] = (char) ch;
+        } else {
+            fprintf(stderr, "Input exceeded max length\n");
+
+            // Consume the rest of the line
+            while (ch != '\n' && ch != EOF) {
+                ch = getchar();
+            }
+
+            return false;
+        }
+    }
+
+    // If we hit EOF before reading anything, signal no more input
+    if (ch == EOF && length == 0) {
+        string[0] = '\0';
+        return false;
+    }
+
+    string[length] = '\0';
+    return true;
+}
+
+
+int main(void) {
+    char lhs[MAXLENGTH];
+    char rhs[MAXLENGTH];
+
+    printf("Enter string 1: ");
+    if (read_line(lhs, MAXLENGTH)) {
+        printf("Enter string 2: ");
+        if (read_line(rhs, MAXLENGTH)) {
+            printf("result of comparison is %d\n", compute(lhs, rhs));
+            return 0;
+        }
+        else return 1;
+    }
+    else return 1;
+
+}
