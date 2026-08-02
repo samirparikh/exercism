@@ -34,6 +34,9 @@
           # LSP servers
           ccls           # works well with gcc
           # clangd is provided by clang-tools above
+
+          # man development pages
+          man-pages
         ];
 
         shellHook = ''
