@@ -1,0 +1,5 @@
+#include "armstrong_numbers.h"
+
+int main(void) {
+    is_armstrong_number(9926315);
+}
