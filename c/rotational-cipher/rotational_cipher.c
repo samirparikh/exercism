@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 char *rotate(const char *text, int shift_key) {
 
@@ -14,14 +15,20 @@ char *rotate(const char *text, int shift_key) {
         return NULL;
     }
 
-    while (*text != '\0') {
-        printf("%c\n", *text);
-        text++;
+    for (size_t i = 0; i < length; i++) {
+        if (isalpha((unsigned char)text[i])) {
+            if (islower(text[i])) {
+                result[i] = 'a' + ((text[i] - 'a' + shift_key) % 26);
+            }
+            else {
+                result[i] = 'A' + ((text[i] - 'A' + shift_key) % 26);
+            }
+        } else {
+            result[i] = text[i];
+        }
     }
 
-    for (size_t i = 0; i < length; i++) {
-        result[i] = text[i] + 1;
-    }
+    result[length] = '\0';
 
     return result;
 }
